@@ -24,11 +24,17 @@ public class LabseqResource {
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response labseq(@RestPath Long id) {
-        BigInteger result = service.getSequenceResult(id);
-        JsonObject response = Json.createObjectBuilder()
-                .add("n", result.toString()) // gets mapped to 'Infinity' otherwise
-                .build();
-        return Response.ok(response).build();
+        try {
+            BigInteger result = service.getSequenceResult(id);
+            JsonObject response = Json.createObjectBuilder()
+                    .add("n", result.toString()) // gets mapped to 'Infinity' otherwise
+                    .build();
+            return Response.ok(response).build();
+        } catch (IllegalArgumentException exception) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(Map.of("error", exception.getMessage()))
+                    .build();
+        }
     }
 
     class Result {
