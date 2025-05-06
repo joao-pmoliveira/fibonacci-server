@@ -4,18 +4,24 @@ Quarkus-based REST API server that exposes a single endpoint "/labseq/{id}" to r
 
 ---
 
-Included by Quarkus:
+## Build Steps
 
+### Docker
 
-## Packaging and running the application
+Build image:
 
-The application can be packaged using:
-
-```shell script
-./mvnw package
+```
+docker build -f src/main/docker/Dockerfile.jvm -t quarkus/labseq-server .
 ```
 
-It produces the `quarkus-run.jar` file in the `target/quarkus-app/` directory.
-Be aware that it’s not an _über-jar_ as the dependencies are copied into the `target/quarkus-app/lib/` directory.
+Run container:
 
-The application is now runnable using `java -jar target/quarkus-app/quarkus-run.jar`.
+```
+docker run -i -t -p 8080:8080 quarkus/labseq-server
+```
+
+Using curl to test:
+```
+curl http:localhost:8080/labseq/100000
+```
+or the browser
