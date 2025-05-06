@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.quarkus.cache.CacheResult;
 import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
@@ -12,7 +13,16 @@ public class LabseqService {
 
     private Map<Long, BigInteger> syncMemo = Collections.synchronizedMap(new HashMap<Long, BigInteger>());
 
-    public BigInteger calculate(Long n) {
+    @CacheResult(cacheName = "labseq-cache")
+    public BigInteger getSequenceResult(Long n) {
+
+        if (n < 0)
+            throw new IllegalArgumentException("Negative indexes are not allowed");
+
+        return calculate(n);
+    }
+
+    private BigInteger calculate(Long n) {
         BigInteger nBig = BigInteger.valueOf(n);
         if (nBig == BigInteger.ZERO || nBig == BigInteger.TWO)
             return BigInteger.ZERO;
