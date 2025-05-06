@@ -3,6 +3,9 @@ package org.dellent.app;
 import java.math.BigInteger;
 import java.util.Map;
 
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.jboss.resteasy.reactive.RestPath;
 
 import jakarta.inject.Inject;
@@ -23,6 +26,11 @@ public class LabseqResource {
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
+    @Operation(summary = "Calculate Labseq", description = "Return the Labseq number at the given index")
+    @Parameter(name = "id", description = "Index of the sequence", required = true)
+    @APIResponse(responseCode = "200", description = "Successful labseq calculation, result returned in response body")
+    @APIResponse(responseCode = "400", description = "Invalid input, index can't be a negative number")
+    @APIResponse(responseCode = "500", description = "Internal server error")
     public Response labseq(@RestPath Long id) {
         try {
             BigInteger result = service.getSequenceResult(id);
